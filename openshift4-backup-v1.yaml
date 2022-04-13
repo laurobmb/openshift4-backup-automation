@@ -15,6 +15,23 @@ metadata:
   labels:
     app: openshift-backup
 ---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-etcd-backup
+  labels:
+    app: openshift-backup
+rules:
+- apiGroups: [""] 
+  resources: 
+     - "nodes" 
+  verbs: ["get", "list"]
+- apiGroups: [""] 
+  resources: 
+     - "pods" 
+     - "pods/log" 
+  verbs: ["get", "list", "create", "delete", "watch"]
+---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -28,7 +45,7 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: cluster-etcd-backup
 ---
 kind: CronJob
 apiVersion: batch/v1
@@ -55,7 +72,7 @@ spec:
         spec:
           containers:
             - name: backup
-              image: "registry.redhat.io/openshift4/ose-cli:v4.8"
+              image: "registry.redhat.io/openshift4/ose-cli:v4.10"
               command:
                 - "/bin/bash"
                 - "-c"
