@@ -16,4 +16,4 @@ Grant access to the **privileged** scc to the service account **openshift-backup
 
 ### Test Job
 
-    oc create job --from=cronjob/openshift-backup teste-002
+    oc -n ocp-backup-etcd create job --from=cronjob/openshift-backup teste-002
